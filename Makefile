@@ -11,6 +11,7 @@
 # TODO: change this variables according to operating system
 MKDIR=mkdir
 CP=cp
+RM=rm
 GIT=git
 ZIP=zip
 FIND=find
@@ -118,6 +119,9 @@ endif
 
 	# Include examples files
 	$(FIND) ./examples/* \( ! -name '*.c' -prune \) -exec $(CP) -r {} ./$(KNOT_THING_NAME)/examples/ \;
+
+	# Remove Linux-Only gpio_sysfs
+	$(RM) ./$(KNOT_THING_NAME)/src/hal/gpio_sysfs.h
 
 	#Zip directory
 	$(ZIP) -r $(KNOT_THING_TARGET) ./$(KNOT_THING_NAME)
