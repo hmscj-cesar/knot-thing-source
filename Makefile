@@ -74,6 +74,7 @@ $(KNOT_THING_TARGET):  $(KNOT_PROTOCOL_LIB_DIR)
 	#Creating subdirectories
 	$(MKDIR) -p ./$(KNOT_THING_NAME)/src/hal
 	$(MKDIR) -p ./$(KNOT_THING_NAME)/examples
+	$(MKDIR) -p ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib
 
 	#Filling with configuration files for Arduino IDE
 	# TODO: Create keywords.txt file to KNoT Thing
@@ -119,8 +120,25 @@ endif
 	# Include examples files
 	$(FIND) ./examples/* \( ! -name '*.c' -prune \) -exec $(CP) -r {} ./$(KNOT_THING_NAME)/examples/ \;
 
+	#Filling Echo-Lib
+	$(FIND) ./$(KNOT_HAL_SRC_LIB_DIR)/comm/ \( -name '*ll*' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	$(FIND) ./$(KNOT_HAL_HDR_LIB_DIR)/ \( -name '*avr*' -or -name '*gpio.h*' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	$(FIND) ./$(KNOT_HAL_HDR_LIB_DIR)/ \( -name '*time.h*' -or -name '*nrf24.h*' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	$(FIND) ./$(KNOT_HAL_SRC_SPI_LIB_DIR)/ \( ! -name '*linux*' -and ! -name '*.am' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	$(FIND) ./$(KNOT_HAL_SRC_NRF_LIB_DIR)/ \( ! -name '*linux*' -and ! -name '*.am' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	$(FIND) ./$(KNOT_HAL_SRC_LIB_DIR)/gpio/ \( ! -name '*linux*' -and -name '*.cpp' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	$(FIND) ./$(KNOT_HAL_SRC_LIB_DIR)/log/ \( ! -name '*linux*' -and -name '*.cpp' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	$(FIND) ./$(KNOT_HAL_SRC_LIB_DIR)/time/ \( ! -name '*linux*' -and -name '*.cpp' \) -exec $(CP) {} ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib \;
+	
+	#Zip Echo-Lib
+	$(ZIP) -r -j ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib
+
+	#Clean Echo-Lib
+	$(RM) -rf ./$(KNOT_THING_NAME)/examples/nRF24_Echo/echo_lib
+
 	#Zip directory
 	$(ZIP) -r $(KNOT_THING_TARGET) ./$(KNOT_THING_NAME)
+
 
 clean:
 	$(RM) $(KNOT_THING_TARGET)
